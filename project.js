@@ -371,8 +371,8 @@ class Pupils {
 }
 const pup = {
     name: {
-        first: "aa",
-        last: "gg"
+        first: "eka",
+        last: "tsivtsivadze"
     },
     dateOfBirth: "02/04/2022", // format date
     phones: [
@@ -473,3 +473,85 @@ const room = 236;
 const room1 = 400;
 const groups = new Groups();
 const groupId = groups.add(room);
+const groupId1 = groups.add(room1);
+groups.addPupil(groupId, pupil);
+groups.addPupil(groupId1, pupil1);
+// groups.removePupil(groupId, pupil.id);
+groups.update(groupId, {
+    room: 300
+});
+// console.log(g )
+
+
+
+class Gradebooks {
+    #group;
+    #teachers;
+    #lms;
+    #count;
+    constructor(groups, teachers, lms) {
+        this.#count = 0;
+        this.gradebooks = new Map();
+        this.#group = groups;
+        this.#teachers = teachers;
+        this.#lms = lms;
+    }
+    add(id) {
+        // Create a new gradebook.
+        let Id = this.#count + 1;
+        this.#count++;
+        return this.gradebooks.set(Id, this.#group.read(id))
+
+    }
+    clear() {
+        // Destroy all data inside this gradebook
+        this.gradebooks.clear();
+    }
+    addRecord(gradebookId, record) {
+
+        this.gradebooks.get(gradebookId).record = record;
+
+    }
+    read(gradebookId, pupilId) {
+        let arr = []
+        let obj = {};
+        let record = [];
+        let innerrecord = {};
+        let a = this.gradebooks.get(gradebookId).pupils.map((element) => {
+            if (element.id == pupilId) {
+                return element.name.first + ' ' + element.name.last
+            }
+        })
+        obj.name = a;
+        obj.record = record;
+        let teacher = this.#teachers.read(this.gradebooks.get(gradebookId).record.teacherId);
+        innerrecord.teacher = teacher.name.first + ' ' + teacher.name.last;
+        innerrecord.subject = teacher.subjects[0].subject;
+        innerrecord.lesson=this.gradebooks.get(gradebookId).record.lesson;
+        innerrecord.mark=this.gradebooks.get(gradebookId).record.mark;
+        record.push(innerrecord);
+        arr.push(obj);
+        return arr
+
+
+
+
+
+    }
+}
+
+
+const pupilId = pupil.id;
+const teacher = teacherId;
+const gradebooks = new Gradebooks(groups, teachers, lms);
+const gradebook = gradebooks.add(groupId);
+const record = {
+    pupilId: pupilId,
+    teacherId: teacherId,
+    subjectId: history.id,
+    lesson: 1,
+    mark: 9
+};
+gradebooks.addRecord(1, record);
+let a = gradebooks.read(1, pupilId)
+console.log(a)
