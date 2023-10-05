@@ -110,7 +110,7 @@ const geo = new Subject({
 const lms = new LMS();
 lms.add(history);
 lms.add(geo);
-console.log(lms.verify(history))
+// console.log(lms.verify(history))
 
 
 
@@ -121,10 +121,9 @@ console.log(lms.verify(history))
 
 class Teachers {
 
-    constructor() {
+    constructor(obj) {
         this.count = 0;
-        this.teacher = new Map();
-
+        this.teacher = new Map()
     }
     add(obj) {
         // all fields are required, except description
@@ -150,7 +149,7 @@ class Teachers {
         if (typeof obj.name.last !== 'string' || obj.name.last === undefined) {
             throw new Error("last name should be string")
         }
-        if (! obj.dateOfBirth.match(/^(\d\d?)\/(\d\d?)\/(\d{4})$/)) {
+        if (!obj.dateOfBirth.match(/^(\d\d?)\/(\d\d?)\/(\d{4})$/)) {
             throw new Error("dateOfBirth should be string")
         }
         if (typeof obj.emails[0].email !== 'string' || obj.emails[0].email === undefined) {
@@ -166,7 +165,7 @@ class Teachers {
         if (typeof obj.phones[0].primary !== 'boolean' || obj.phones[0].primary === undefined) {
             throw new Error("phoneprimary   should be boolean")
         }
-        if (obj.sex!=='male' && obj.sex!='female') {
+        if (obj.sex !== 'male' && obj.sex != 'female') {
             throw new Error("sex   should be male or female")
         }
         if (typeof obj.subjects[0].subject !== 'string' || obj.subjects[0].subject === undefined) {
@@ -199,10 +198,10 @@ class Teachers {
         if (arguments.length === 0) {
             throw Error("The parameter must be passed ")
         }
-        if(!this.teacher.has(teacherId)){
+        if (!this.teacher.has(teacherId)) {
             throw Error("this id is not match")
         }
-        
+
         update(this.teacher.get(teacherId), updatedProfile)
         function update(obj, key) {
             for (let a in key) {
@@ -227,12 +226,188 @@ class Teachers {
         }
 
     }
-    remove(id){
+    remove(id) {
         // will remove teacher
-        if(!this.teacher.has(id)){
+        if (!this.teacher.has(id)) {
             throw Error("this id is not match")
         }
         this.teacher.delete(id);
     }
 }
 const teachers = new Teachers();
+const data = {
+    name: {
+        first: "ana",
+        last: "anoo"
+    },
+    dateOfBirth: "01/01/2023", // format date
+    emails: [
+        {
+            email: "aaa@hgmail.com",
+            primary: true,
+        }
+    ],
+    phones: [
+        {
+            phone: "55555555555",
+            primary: true
+        }
+    ],
+    sex: "male", // male or female
+    subjects: [
+        {
+            subject: "history" // just name property of subject.
+        }
+    ],
+    description: "aaaaaa",
+}
+const teacherId = teachers.add(data);
+const teacherid = teachers.update(teacherId, {
+    email: "aa",
+})
+// teachers.remove(teacherId)
+//  console.log(teachers.read(teacherId))
+
+
+
+
+class Pupils {
+    #count;
+
+    constructor(obj) {
+        this.#count = 0;
+        let id = this.#count + 1;
+        this.pupils = new Map();
+        this.id = id;// should return pupil ID
+
+
+    }
+    add(obj) {
+        // Create new Pupil from Pupil's data
+        if (typeof obj !== 'object' || Array.isArray(obj) || obj === null) {
+            throw new Error("is not object")
+        }
+        if (typeof obj.name !== 'object' || Array.isArray(obj.name) || obj.name === null) {
+            throw new Error("must have  name")
+        }
+        if (typeof obj.phones !== 'object' || obj.phones === null) {
+            throw new Error("must have  phone")
+        }
+        if (typeof obj.name.first !== 'string' || obj.name.first == undefined) {
+            throw new Error("first name should be string")
+        }
+        if (typeof obj.name.last !== 'string' || obj.name.last === undefined) {
+            throw new Error("last name should be string")
+        }
+        if (!obj.dateOfBirth.match(/^(\d\d?)\/(\d\d?)\/(\d{4})$/)) {
+            throw new Error("dateOfBirth should be string")
+        }
+
+        if (typeof obj.phones[0].phone !== 'string' || obj.phones[0].phone === undefined) {
+            throw new Error("phone should be string")
+        }
+        if (typeof obj.phones[0].primary !== 'boolean' || obj.phones[0].primary === undefined) {
+            throw new Error("phoneprimary   should be boolean")
+        }
+        if (obj.sex !== 'male' && obj.sex != 'female') {
+            throw new Error("sex   should be male or female")
+        }
+        if (obj.description !== undefined) {
+            if (typeof obj.description !== 'string') {
+                throw new Error("description    should be string")
+            }
+        }
+        let id = this.#count + 1;
+        this.#count += 1;
+        this.pupils.set(id, obj);
+        obj.id = id;
+        return obj;
+    }
+    read(id) {
+        // will return Pupils data including pupil's id
+
+        if (arguments.length === 0) {
+            throw Error("The parameter must be passed ")
+        }
+        if (this.pupils.has(id)) {
+            return this.pupils.get(id)
+        } else {
+            return null
+        }
+    }
+    update(id, updatedProfile) {
+        update(this.pupils.get(id), updatedProfile)
+        function update(obj, key) {
+            for (let a in key) {
+                for (let k in obj) {
+                    if (k == a) {
+                        if (typeof key[a] === 'object') {
+                            update(obj[k], key[a])
+                        }
+                    }
+                }
+                for (let k in obj) {
+                    if (typeof obj[k] === 'object') {
+                        update(obj[k], key);
+
+                    } else if (k == a) {
+                        obj[k] = key[a];
+                    }
+                }
+
+            }
+
+        }
+    }
+    remove(id){
+        if (arguments.length === 0) {
+            throw Error("The parameter must be passed ")
+        }
+        if (typeof id !== 'number') {
+            throw Error("The parameter must be number ")
+        }
+        this.pupils.delete(id);
+    }
+}
+const pup = {
+    name: {
+        first: "aa",
+        last: "gg"
+    },
+    dateOfBirth: "02/04/2022", // format date
+    phones: [
+        {
+            phone: "555555555h",
+            primary: true,
+        }
+    ],
+    sex: "male", // male OR female
+    description: "string"
+}
+const pap = {
+    name: {
+        first: "asdfsga",
+        last: "gssg"
+    },
+    dateOfBirth: "02/04/2024", // format date
+    phones: [
+        {
+            phone: "566676869655h",
+            primary: true,
+        }
+    ],
+    sex: "female", // male OR female
+    description: "sgsg"
+}
+const pupils = new Pupils();
+
+// Create a new pupil
+const pupil = pupils.add(pup);
+const pupil1 = pupils.add(pap);
+// let updatedProfile = {
+//     phone: "0000",
+// }
+
+// pupils.update(pupil.id, updatedProfile)
+// pupils.remove(pupil.id)
+console.log(pupil.id)
