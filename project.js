@@ -359,7 +359,7 @@ class Pupils {
 
         }
     }
-    remove(id){
+    remove(id) {
         if (arguments.length === 0) {
             throw Error("The parameter must be passed ")
         }
@@ -410,4 +410,66 @@ const pupil1 = pupils.add(pap);
 
 // pupils.update(pupil.id, updatedProfile)
 // pupils.remove(pupil.id)
-console.log(pupil.id)
+// console.log(pupil.id)
+
+
+
+
+
+
+
+class Groups {
+    #count;
+
+    constructor() {
+        this.#count = 0;
+        this.groups = new Map();
+
+    }
+
+    add(room) {
+        let id = (this.#count + 1).toString();
+        this.#count += 1;
+        const group = {};
+        group.room = room;
+        group.id = id;
+        group.pupils = [];
+        this.groups.set(id, group);
+        return id;
+    }
+    addPupil(id, pupil) {
+        // Add this pupil to this group
+        this.groups.get(id).pupils.push(pupil)
+        return this.groups.get(id);
+    }
+    removePupil(groupId, pupilId) {
+        // Remove this pupil from this group
+        let arr = this.groups.get(groupId).pupils;
+        arr.forEach((element) => {
+            if (element.id == pupilId) {
+                arr.splice(element, 1)
+            }
+        })
+    }
+    update(groupId, Room) {
+        // Update room for this group
+        this.groups.get(groupId).room = Room.room
+    }
+    read(id) {
+        // Read information about group
+
+        return this.groups.get(id)
+    }
+    readAll() {
+        let arr = [];
+        this.groups.forEach((element, key) => {
+            arr.push(this.groups.get(key));
+        });
+
+        return arr;
+    }
+}
+const room = 236;
+const room1 = 400;
+const groups = new Groups();
+const groupId = groups.add(room);
